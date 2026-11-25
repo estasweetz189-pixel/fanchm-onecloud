@@ -113,7 +113,8 @@ jobs:
             echo "::error::target device missing after defconfig"; exit 1; }
           for sym in CONFIG_KERNEL_ZRAM_BACKEND_LZ4 CONFIG_KERNEL_ZRAM_DEF_COMP_LZ4 \
                      CONFIG_PACKAGE_fwxd CONFIG_PACKAGE_fwx \
-                     CONFIG_PACKAGE_libfwx_common CONFIG_PACKAGE_luci-theme-fanchmwrt; do
+                     CONFIG_PACKAGE_libfwx_common CONFIG_PACKAGE_luci-theme-fanchmwrt \
+                     CONFIG_PACKAGE_luci-app-openclash; do
             grep -qx "$sym=y" .config || echo "::warning::missing $sym (build continues)"
           done
           echo "target OK"
