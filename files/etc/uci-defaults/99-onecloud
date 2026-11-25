@@ -1,0 +1,32 @@
+#!/bin/sh
+# First boot defaults. uci-defaults removes this after it succeeds.
+
+# zram swap: half of RAM, lz4
+uci -q set system.@system[0].zram_size_mb='512'
+uci -q set system.@system[0].zram_comp_algo='lz4'
+
+# China timezone
+uci -q set system.@system[0].timezone='CST-8'
+uci -q set system.@system[0].zonename='Asia/Shanghai'
+
+# Serve time to the LAN as well as sync from upstream.
+uci -q set system.ntp.enable_server='1'
+
+# Chinese LuCI + fanchmwrt theme
+uci -q set luci.main.lang='zh_cn'
+uci -q set luci.main.mediaurlbase='/luci-static/fanchmwrt'
+
+# Bigger DNS cache
+uci -q set dhcp.@dnsmasq[0].cachesize='1000'
+
+# This box sits on an existing LAN (main router keeps DHCP), so
+# its own DHCP server must stay silent to avoid conflicts.
+uci -q set dhcp.lan.ignore='1'
+
+uci -q commit dhcp
+uci -q commit system
+uci -q commit luci
+
+/etc/init.d/irqbalance enable 2>/dev/null
+
+exit 0

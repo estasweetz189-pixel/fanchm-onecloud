@@ -1,0 +1,12 @@
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+# eMMC has its own FTL, so the kernel I/O scheduler only adds latency.
+for _q in /sys/block/mmcblk*/queue; do
+	[ -d "$_q" ] || continue
+	echo none > "$_q/scheduler" 2>/dev/null
+	echo 512 > "$_q/read_ahead_kb" 2>/dev/null
+done
+unset _q
+
+exit 0

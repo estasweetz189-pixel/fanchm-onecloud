@@ -1,0 +1,12 @@
+#!/bin/sh
+# Spread network softirq work over the four A5 cores. The built-in NIC and
+# any USB NIC are single-queue, so without this everything lands on CPU0.
+
+[ -e /etc/config/network ] || exit 0
+
+uci -q get network.@globals[0] >/dev/null 2>&1 || uci -q set network.@globals[0]=globals
+uci -q set network.@globals[0].packet_steering='2'
+uci -q set network.@globals[0].steering_flows='256'
+uci -q commit network
+
+exit 0
