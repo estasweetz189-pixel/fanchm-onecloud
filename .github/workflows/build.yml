@@ -114,7 +114,9 @@ jobs:
           for sym in CONFIG_KERNEL_ZRAM_BACKEND_LZ4 CONFIG_KERNEL_ZRAM_DEF_COMP_LZ4 \
                      CONFIG_PACKAGE_fwxd CONFIG_PACKAGE_fwx \
                      CONFIG_PACKAGE_libfwx_common CONFIG_PACKAGE_luci-theme-fanchmwrt \
-                     CONFIG_PACKAGE_luci-app-openclash; do
+                     CONFIG_PACKAGE_luci-app-openclash \
+                     CONFIG_PACKAGE_luci-app-fwx-dashboard \
+                     CONFIG_PACKAGE_luci-app-fwx-appfilter; do
             grep -qx "$sym=y" .config || echo "::warning::missing $sym (build continues)"
           done
           echo "target OK"
@@ -168,6 +170,7 @@ jobs:
           mkdir -p /tmp/fw
           cd openwrt/bin/targets/amlogic/meson8b
           cp ./*-sysupgrade.img.gz ./*-emmc.burn.img.xz /tmp/fw/
+          cp ./*.manifest /tmp/fw/ 2>/dev/null || true
           cp ../../../../.config /tmp/fw/build.config
           cd /tmp/fw && sha256sum ./* > sha256sums && ls -lh
 
